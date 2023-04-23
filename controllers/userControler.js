@@ -8,11 +8,11 @@ const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
 };
 
-//register user
+//register user---------------------------------
 const registerUser = async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
+  const { name, email, password } = req.body;
 
+  try {
     //  find single user
     const exist = await userModel.findOne({ email });
 
@@ -47,11 +47,42 @@ const registerUser = async (req, res) => {
     // create token
     const token = createToken(user._id);
 
-    res.status(200).json({ _id: user._id, name, email, password: user.password, token });
+    res
+      .status(200)
+      .json({ _id: user._id, name, email, password: user.password, token });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
   }
 };
 
-module.exports = { registerUser };
+// login user-----------------------------------
+
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json("Invalid email or password.");
+    }
+    // compaire password
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      return res.status(400).json("Incorrect password.");
+    }
+    // create a token
+    const token = createToken(user._id);
+    res
+      .status(200)
+      .json({ _id: user._id, name: user.name, email, password: user.password,token });
+
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err)
+  }
+};
+
+module.exports = { registerUser,loginUser };
