@@ -2,7 +2,7 @@ const userModel = require("../model/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 // generator token
 const createToken = (_id) => {
@@ -93,8 +93,8 @@ const loginUser = async (req, res) => {
 const findUser = async (req, res) => {
   const { userId } = req.params;
 
-  if(!mongoose.Types.ObjectId.isValid(userId)){
-    return res.status(400).json("Invalid id!")
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json("Invalid id!");
   }
 
   try {
@@ -107,17 +107,15 @@ const findUser = async (req, res) => {
 };
 
 // get all users-------------------------
-const getAllUsers = async (req,res)=>{
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await userModel.find({});
 
-  try{
-    const users = await userModel.find({})
-
-    res.status(200).json(users)
-
-  }catch(err){
+    res.status(200).json(users);
+  } catch (err) {
     console.log(err);
     res.status(500).json(err);
   }
-}
+};
 
-module.exports = { registerUser, loginUser, findUser,getAllUsers };
+module.exports = { registerUser, loginUser, findUser, getAllUsers };
