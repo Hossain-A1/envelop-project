@@ -9,7 +9,7 @@ const router = express.Router()
 
 // routes
 router.post("/", createChat)
-router.get("/userId", findAllChat)
+router.get("/:userId", findAllChat)
 router.get("/find/:firstId/:secondId",findSingleChat)
 
-module.express = router;
+module.exports = router;

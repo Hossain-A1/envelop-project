@@ -2,11 +2,11 @@ const chatModel = require("../model/chatModel");
 
 // create chat-----------------------------------
 const createChat = async (req, res) => {
-  const { fristId, secondId } = req.body;
+  const { firstId, secondId } = req.body;
 
   try {
     const chat = await chatModel.findOne({
-      members: { $all: [fristId, secondId] },
+      members: { $all: [firstId, secondId] },
     });
     if (chat) {
       return res.status(200).json(chat);
@@ -14,7 +14,7 @@ const createChat = async (req, res) => {
 
     // create new chat
     const newChat = await chatModel.create({
-      members: [fristId, secondId],
+      members: [firstId, secondId],
     });
     res.status(200).json(newChat);
   } catch (err) {
@@ -50,6 +50,7 @@ const findSingleChat = async (req, res) => {
     res.status(500).json(err);
   }
 };
+
 module.exports = {
   createChat,
   findAllChat,
